@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#define cuttoff 3
 typedef int Elemtype;
 void InsertSort(Elemtype A[],int N){
     int i=0,j=0;
@@ -46,16 +47,44 @@ void swap(int *a, int *b)
     *b = *a - *b;
     *a = *a - *b;
 }
-Elemtype Medium(Elemtype A[],int left,int right){
-    int center=(left+right)/2;
-    if(A[left]>A[center])
-        swap(&A[left],&A[center]);
-    if(A[left]>A[right])
-        swap(&A[left],&A[right]);
-    if(A[center]>A[right])
-        swap(&A[center],&A[right]);
-    swap(&A[center],&A[right-1]);                          //center in right-1
-    return A[right-1];                                     //consider 1~right-1 
+Elemtype Medium(Elemtype A[], int left, int right)
+{
+    int center = (left + right) / 2;
+    if (A[left] > A[center])
+        swap(&A[left], &A[center]);
+    if (A[left] > A[right])
+        swap(&A[left], &A[right]);
+    if (A[center] > A[right])
+        swap(&A[center], &A[right]);
+    swap(&A[center], &A[right - 1]); //center in right-1
+    return A[right - 1];             //consider 1~right-1
+}
+void Qsort(Elemtype A[],int left,int right){
+    int pivot, low, high;
+    if(cuttoff<=right-left){                    //large enough
+        pivot = Medium(A, left, right);
+        low = left;
+        high = right - 1;
+        while (1)
+        {
+            while(A[++low]<pivot)
+                ;
+            while(A[--high]>pivot)
+                ;
+            if(low<high)
+                swap(&A[low], &A[high]);
+            else
+                break;
+        }
+        swap(&A[low], &A[right - 1]);
+        Qsort(A, left, low - 1);
+        Qsort(A, low + 1, right);
+    }else{
+        InsertSort(A + left, right - left + 1);
+    }
+}
+void QuickSort(Elemtype A[],int N){
+    Qsort(A, 0, N - 1);
 }
 
 int main(){
@@ -64,10 +93,12 @@ int main(){
     Elemtype A[10];
     Elemtype B[10];
     Elemtype C[10];
+    Elemtype D[10];
     for(i=0;i<10;i++){
         A[i]=rand()%100+1;
         B[i]=rand()%100+1;
         C[i]=rand()%100+1;
+        D[i]=rand()%100+1;
         printf("%d ",A[i]);
     }
     InsertSort(A,10);
@@ -84,5 +115,11 @@ int main(){
     Bubble(C,10);
     for(i=0;i<10;i++){
         printf("%d ",C[i]);
+    }
+    printf("\n");
+    QuickSort(D, 10);
+    for (i = 0; i < 10; i++)
+    {
+        printf("%d ", D[i]);
     }
 }
