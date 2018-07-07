@@ -195,11 +195,20 @@ int Count(Tree* Root){
     }
     return n;
 }
+int GetHeight(Tree* Root){
+    int LH = 0, RH = 0;
+    if(!Root)
+        return 0;
+    LH = GetHeight(Root->Left);
+    RH = GetHeight(Root->Right);
+    return ((LH > RH ? LH : RH) + 1);
+}
 int main(){
     //int n = 0;
     Tree *Root = NULL;
     Root = PreCreateTree();
     LineOrderTree(Root);
+    printf("\n\nHeight=%d\n", GetHeight(Root));
     //PostOrder(Root);
     // n = Count(Root);
     // printf("%d ", n);
