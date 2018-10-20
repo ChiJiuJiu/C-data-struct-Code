@@ -3,6 +3,7 @@
 typedef struct PCB PCB;
 struct PCB {
     int PID;
+    int UID;
     PCB* next;
 };
 
@@ -33,7 +34,7 @@ void delete(PCB* Head,int pid) {
     if(!isEmpty(Head)){
     PCB* pointer = Head->next;
     PCB* pre = Head;
-    while((pointer->PID != pid) && pointer) {
+    while(pointer && (pointer->PID != pid)) {
         pre = pointer;
         pointer = pointer->next;
     }
@@ -47,7 +48,7 @@ void delete(PCB* Head,int pid) {
 
 void create() {
     PCB* node = (PCB*)malloc(sizeof(PCB));
-    scanf("%d",&node->PID);
+    scanf("%d%d",&node->PID,&node->UID);
     Insert(HReady,node);
     if(isEmpty(HRun)){
         Insert(HRun,getP(HReady));
@@ -122,7 +123,7 @@ void show(PCB* Head){
     }
     PCB *pointer = Head->next;
     while(pointer) {
-        printf("%d ", pointer->PID);
+        printf("PID:%d UID:%d ", pointer->PID, pointer->UID);
         pointer = pointer->next;
     }
     printf("\n");
@@ -151,6 +152,7 @@ int main(){
         printf("5.Display\n");
         printf("0.Exit\n");
         printf("Please Select:");
+        fflush(stdin);
         scanf("%c", x);
         while(sizeof(x)>2||x[0]<'0'||x[0]>'5'){
         	printf("Input error! Please input again:");
@@ -159,7 +161,7 @@ int main(){
 		}
         switch(x[0]){
             case '1':
-                printf("Please input the programming ID:");
+                printf("Please input the programming ID AND User ID:");
                 create();
                 break;
             case '2':
