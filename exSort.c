@@ -7,7 +7,7 @@
 int cutoff = 3;
 LARGE_INTEGER begin, end, frequency;
 typedef int ElementType;
-#define MAX 2000
+#define MAX 20
 void InsertSort(int PreviousArray[], int n)
 {
     int temp = 0, i = 0, j = 0;
@@ -201,22 +201,86 @@ void Stop(){
 double getTime(LARGE_INTEGER begin,LARGE_INTEGER end){
     return (double)(end.QuadPart - begin.QuadPart) / (double)(frequency.QuadPart);
 }
+int ImportTofile(int nums[], int N, char filename[]){
+    FILE *FP = NULL;
+    FP = fopen(filename,"wb");
+    if(!FP){
+        printf("Open file error! Please check the FilePath!\n");
+        fclose(FP);
+        return 0;
+    }
+    int i = 0;
+    for (i = 0; i < N; i++){
+        if(fwrite(&nums[i],sizeof(int),1,FP) != 1){
+        	printf("Import to file error! Please import again!\n");
+        	fclose(FP);
+        	return 0;
+        }
+	}
+	fclose(FP);
+	return 1;
+}
+int LoadFromfile(int nums[], int N,char filename[]){
+	FILE *FP = NULL;
+    FP = fopen(filename, "rb");
+    if (!FP){
+        printf("Open file error! Please check the FilePath!\n");
+        fclose(FP);
+        return 0;
+    }
+    int i = 0;
+    fseek(FP, 0, 0);
+    for (i = 0; i < N; i++){
+        if(fread(&nums[i],sizeof(int),1,FP) != 1){
+            printf("Loading to memory error! Please import again!\n");
+            fclose(FP);
+            return 0;
+        }
+    }
+    fclose(FP);
+	return 1;
+}
+int* GenerateRandomNums(int size){
+    int *nums = (int *)malloc(sizeof(int) * size);
+    if(!nums)
+		return NULL; 
+    int i = 0;
+    for (i = 0; i < size; i++){
+        nums[i] = rand() % RAND_MAX;
+    }
+    return nums;
+}
+void Display(int nums[], int size){
+    int i = 0;
+    int cnt = 1;
+    for (i = 0; i < size; i++){
+        printf("%d ", nums[i]);
+        if(cnt++ % 20 == 0)
+            printf("\n");
+    }
+    printf("\n");
+}
 int main()
 {	QueryPerformanceFrequency(&frequency);
     char x = 0;
     int i = 0;
     int cnt = 1;
     srand(time(NULL));
-    int Previous[MAX];
+    int *Previous;
+    int *Sorted;
+    char* file;
     char input[2];
     do
     {
-        printf("1.Bubble Sort\n");
-        printf("2.Insert Sort\n");
-        printf("3.Shell  Sort\n");
-        printf("4.Quick  Sort\n");
-        printf("5.Merge  Sort\n");
-        printf("6.Heap   Sort\n");
+        printf("1.Generate random numbers\n");
+        printf("2.Read nums from file\n");
+        printf("3.Write nums to file\n");
+        printf("4.Bubble Sort\n");
+        printf("5.Insert Sort\n");
+        printf("6.Shell  Sort\n");
+        printf("7.Quick  Sort\n");
+        printf("8.Merge  Sort\n");
+        printf("9.Heap   Sort\n");
         printf("0.exit\n");
         printf("Please Select:");
         fflush(stdin);
@@ -232,6 +296,23 @@ int main()
         switch (x)
         {
         case '1':
+            Previous = GenerateRandomNums(MAX);
+            if(Previous){
+            	printf("Below are the Random numbers:\n");
+            	Display(Previous, MAX);
+			}else{
+				printf("Malloc memory fail!\n");	
+			}
+            break;
+        case '2':
+        	if(LoadFromfile(Previous,MAX,"data.txt"))
+        		Display(Previous,MAX);
+        	break;
+        case '3':
+        	if(ImportTofile(Previous,MAX,"data.txt"))
+				printf("Write nums to file success!\n");
+        	break;
+        case '4':
             printf("\nBubble sort:\n");
             for (i = 0; i < MAX; i++)
             {
@@ -244,6 +325,7 @@ int main()
                 if(cnt++ % 20 == 0)
                     printf("\n");
             }
+            ImportTofile(Previous, MAX, "data.txt");
             Start();
             Bubble(Previous, MAX);
             Stop();
@@ -257,7 +339,7 @@ int main()
             printf("Running Time: %lfs",getTime(begin,end));
             printf("\n");
             break;
-        case '2':
+        case '5':
             printf("\nInsert sort:\n");
             for (i = 0; i < MAX; i++)
             {
@@ -284,7 +366,7 @@ int main()
             printf("Running Time: %lfs", getTime(begin, end));
             printf("\n");
             break;
-        case '3':
+        case '6':
             printf("\nShell sort:\n");
             for (i = 0; i < MAX; i++)
             {
@@ -311,7 +393,7 @@ int main()
             printf("Running Time: %lfs", getTime(begin, end));
             printf("\n");
             break;
-        case '4':
+        case '7':
             printf("\nQuick sort:\n");
             for (i = 0; i < MAX; i++)
             {
@@ -338,7 +420,7 @@ int main()
             printf("Running Time: %lfs", getTime(begin, end));
             printf("\n");
             break;
-        case '5':
+        case '8':
             printf("\nMerge sort:\n");
             for (i = 0; i < MAX; i++)
             {
@@ -365,7 +447,7 @@ int main()
             printf("Running Time: %lfs", getTime(begin, end));
             printf("\n");
             break;
-        case '6':
+        case '9':
             printf("\nHeap sort:\n");
             for (i = 0; i < MAX; i++)
             {
