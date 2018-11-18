@@ -7,7 +7,7 @@
 int cutoff = 3;
 LARGE_INTEGER begin, end, frequency;
 typedef int ElementType;
-#define MAX 20
+#define MAX 2000
 void InsertSort(int PreviousArray[], int n)
 {
     int temp = 0, i = 0, j = 0;
@@ -260,15 +260,19 @@ void Display(int nums[], int size){
     }
     printf("\n");
 }
+void Copy(int* Previous,int* Sorted,int size){
+    int i = 0;
+    for (i = 0; i < size; i++){
+        Sorted[i] = Previous[i];
+    }
+}
 int main()
 {	QueryPerformanceFrequency(&frequency);
-    char x = 0;
-    int i = 0;
-    int cnt = 1;
+    char x;
     srand(time(NULL));
     int *Previous;
-    int *Sorted;
-    char* file;
+    int Sorted[MAX];
+    int mark = 0;
     char input[2];
     do
     {
@@ -292,7 +296,6 @@ int main()
             scanf("%s", input);
         }
         x = input[0];
-        cnt = 1;
         switch (x)
         {
         case '1':
@@ -301,177 +304,142 @@ int main()
             	printf("Below are the Random numbers:\n");
             	Display(Previous, MAX);
 			}else{
-				printf("Malloc memory fail!\n");	
+				printf("Allocate memory fail!\n");	
 			}
+            mark = 1;
             break;
         case '2':
         	if(LoadFromfile(Previous,MAX,"data.txt"))
         		Display(Previous,MAX);
-        	break;
+            mark = 1;
+            break;
         case '3':
-        	if(ImportTofile(Previous,MAX,"data.txt"))
+            if(!mark)
+                printf("No nums in memory! Please Generate or Load nums!\n");
+            else if(ImportTofile(Previous,MAX,"data.txt"))
 				printf("Write nums to file success!\n");
         	break;
         case '4':
-            printf("\nBubble sort:\n");
-            for (i = 0; i < MAX; i++)
-            {
-                Previous[i] = rand() % 100 + 1;
+            if(mark){
+                printf("\nBubble sort:\n");
+                printf("Previous Arrary:\n");
+                Display(Previous, MAX);
+                Copy(Previous, Sorted,MAX);
+                Start();
+                Bubble(Sorted, MAX);
+                Stop();
+                ImportTofile(Sorted, MAX, "BubbleSort.txt");
+                printf("\nSorted Arrary:\n");
+                Display(Sorted, MAX);
+                printf("Running Time: %lfs", getTime(begin, end));
+            }else{
+                printf("No nums in memory! Please Generate or Load nums!\n");
             }
-            printf("Previous Arrary:\n");
-            for (i = 0; i < MAX; i++)
-            {
-                printf("%d ", Previous[i]);
-                if(cnt++ % 20 == 0)
-                    printf("\n");
-            }
-            ImportTofile(Previous, MAX, "data.txt");
-            Start();
-            Bubble(Previous, MAX);
-            Stop();
-            printf("\nSorted Arrary:\n");
-            for (i = 0; i < MAX; i++)
-            {
-                printf("%d ", Previous[i]);
-                if (cnt++ % 20 == 0)
-                    printf("\n");
-            }
-            printf("Running Time: %lfs",getTime(begin,end));
             printf("\n");
             break;
         case '5':
-            printf("\nInsert sort:\n");
-            for (i = 0; i < MAX; i++)
+            if (mark)
             {
-                Previous[i] = rand() % 100 + 1;
+                printf("\nInsert sort:\n");
+                printf("Previous Arrary:\n");
+                Display(Previous, MAX);
+                Copy(Previous, Sorted, MAX);
+                Start();
+                InsertSort(Sorted, MAX);
+                Stop();
+                ImportTofile(Sorted, MAX, "InsertSort.txt");
+                printf("\nSorted Arrary:\n");
+                Display(Sorted, MAX);
+                printf("Running Time: %lfs", getTime(begin, end));
             }
-            printf("Previous Arrary:\n");
-            for (i = 0; i < MAX; i++)
+            else
             {
-                printf("%d ", Previous[i]);
-                if (cnt++ % 20 == 0)
-                    printf("\n");
+                printf("No nums in memory! Please Generate or Load nums!\n");
             }
-            Start();
-            InsertSort(Previous, MAX);
-            Stop();
-            printf("\nSorted Arrary:\n");
-            for (i = 0; i < MAX; i++)
-            {
-                printf("%d ", Previous[i]);
-                if (cnt++ % 20 == 0)
-                    printf("\n");
-            }
-            printf("\n");
-            printf("Running Time: %lfs", getTime(begin, end));
             printf("\n");
             break;
         case '6':
-            printf("\nShell sort:\n");
-            for (i = 0; i < MAX; i++)
+            if (mark)
             {
-                Previous[i] = rand() % 100 + 1;
+                printf("\nShell sort:\n");
+                printf("Previous Arrary:\n");
+                Display(Previous, MAX);
+                Copy(Previous, Sorted, MAX);
+                Start();
+                ShellSort(Sorted, MAX);
+                Stop();
+                ImportTofile(Sorted, MAX, "ShellSort.txt");
+                printf("\nSorted Arrary:\n");
+                Display(Sorted, MAX);
+                printf("Running Time: %lfs", getTime(begin, end));
             }
-            printf("Previous Arrary:\n");
-            for (i = 0; i < MAX; i++)
+            else
             {
-                printf("%d ", Previous[i]);
-                if (cnt++ % 20 == 0)
-                    printf("\n");
+                printf("No nums in memory! Please Generate or Load nums!\n");
             }
-            Start();
-            ShellSort(Previous, MAX);
-            Stop();
-            printf("\nSorted Arrary:\n");
-            for (i = 0; i < MAX; i++)
-            {
-                printf("%d ", Previous[i]);
-                if (cnt++ % 20 == 0)
-                    printf("\n");
-            }
-            printf("\n");
-            printf("Running Time: %lfs", getTime(begin, end));
             printf("\n");
             break;
         case '7':
-            printf("\nQuick sort:\n");
-            for (i = 0; i < MAX; i++)
+            if (mark)
             {
-                Previous[i] = rand() % 100 + 1;
+                printf("\nQuick sort:\n");
+                printf("Previous Arrary:\n");
+                Display(Previous, MAX);
+                Copy(Previous, Sorted, MAX);
+                Start();
+                QuickSort(Sorted, MAX);
+                Stop();
+                ImportTofile(Sorted, MAX, "QuickSort.txt");
+                printf("\nSorted Arrary:\n");
+                Display(Sorted, MAX);
+                printf("Running Time: %lfs", getTime(begin, end));
             }
-            printf("Previous Arrary:\n");
-            for (i = 0; i < MAX; i++)
+            else
             {
-                printf("%d ", Previous[i]);
-                if (cnt++ % 20 == 0)
-                    printf("\n");
+                printf("No nums in memory! Please Generate or Load nums!\n");
             }
-            Start();
-            QuickSort(Previous, MAX);
-            Stop();
-            printf("\nSorted Arrary:\n");
-            for (i = 0; i < MAX; i++)
-            {
-                printf("%d ", Previous[i]);
-                if (cnt++ % 20 == 0)
-                    printf("\n");
-            }
-            printf("\n");
-            printf("Running Time: %lfs", getTime(begin, end));
             printf("\n");
             break;
         case '8':
-            printf("\nMerge sort:\n");
-            for (i = 0; i < MAX; i++)
+            if (mark)
             {
-                Previous[i] = rand() % 100 + 1;
+                printf("\nMerge sort:\n");
+                printf("Previous Arrary:\n");
+                Display(Previous, MAX);
+                Copy(Previous, Sorted, MAX);
+                Start();
+                MergeSort(Sorted, MAX);
+                Stop();
+                ImportTofile(Sorted, MAX, "MergeSort.txt");
+                printf("\nSorted Arrary:\n");
+                Display(Sorted, MAX);
+                printf("Running Time: %lfs", getTime(begin, end));
             }
-            printf("Previous Arrary:\n");
-            for (i = 0; i < MAX; i++)
+            else
             {
-                printf("%d ", Previous[i]);
-                if (cnt++ % 20 == 0)
-                    printf("\n");
+                printf("No nums in memory! Please Generate or Load nums!\n");
             }
-            Start();
-            MergeSort(Previous, MAX);
-            Stop();
-            printf("\nSorted Arrary:\n");
-            for (i = 0; i < MAX; i++)
-            {
-                printf("%d ", Previous[i]);
-                if (cnt++ % 20 == 0)
-                    printf("\n");
-            }
-            printf("\n");
-            printf("Running Time: %lfs", getTime(begin, end));
             printf("\n");
             break;
         case '9':
-            printf("\nHeap sort:\n");
-            for (i = 0; i < MAX; i++)
+            if (mark)
             {
-                Previous[i] = rand() % 100 + 1;
+                printf("\nHeap sort:\n");
+                printf("Previous Arrary:\n");
+                Display(Previous, MAX);
+                Copy(Previous, Sorted, MAX);
+                Start();
+                HeapSort(Sorted, MAX);
+                Stop();
+                ImportTofile(Sorted, MAX, "HeapSort.txt");
+                printf("\nSorted Arrary:\n");
+                Display(Sorted, MAX);
+                printf("Running Time: %lfs", getTime(begin, end));
             }
-            printf("Previous Arrary:\n");
-            for (i = 0; i < MAX; i++)
+            else
             {
-                printf("%d ", Previous[i]);
-                if (cnt++ % 20 == 0)
-                    printf("\n");
+                printf("No nums in memory! Please Generate or Load nums!\n");
             }
-            Start();
-            HeapSort(Previous, MAX);
-            Stop();
-            printf("\nSorted Arrary:\n");
-            for (i = 0; i < MAX; i++)
-            {
-                printf("%d ", Previous[i]);
-                if (cnt++ % 20 == 0)
-                    printf("\n");
-            }
-            printf("\n");
-            printf("Running Time: %lfs", getTime(begin, end));
             printf("\n");
             break;
         case '0':
