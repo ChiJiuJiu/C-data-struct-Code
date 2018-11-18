@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
 #include <time.h>
+#include <conio.h>
 int cutoff = 3;
+LARGE_INTEGER begin, end, frequency;
 typedef int ElementType;
 #define MAX 2000
 void InsertSort(int PreviousArray[], int n)
@@ -189,8 +192,17 @@ void Bubble(int Previous[], int N)
         flag = 0;
     }
 }
+void Start(){
+    QueryPerformanceCounter(&begin);
+}
+void Stop(){
+    QueryPerformanceCounter(&end);
+}
+double getTime(LARGE_INTEGER begin,LARGE_INTEGER end){
+    return (double)(end.QuadPart - begin.QuadPart) / (double)(frequency.QuadPart);
+}
 int main()
-{
+{	QueryPerformanceFrequency(&frequency);
     char x = 0;
     int i = 0;
     int cnt = 1;
@@ -216,6 +228,7 @@ int main()
             scanf("%s", input);
         }
         x = input[0];
+        cnt = 1;
         switch (x)
         {
         case '1':
@@ -231,7 +244,9 @@ int main()
                 if(cnt++ % 20 == 0)
                     printf("\n");
             }
+            Start();
             Bubble(Previous, MAX);
+            Stop();
             printf("\nSorted Arrary:\n");
             for (i = 0; i < MAX; i++)
             {
@@ -239,8 +254,8 @@ int main()
                 if (cnt++ % 20 == 0)
                     printf("\n");
             }
+            printf("Running Time: %lfs",getTime(begin,end));
             printf("\n");
-            cnt = 0;
             break;
         case '2':
             printf("\nInsert sort:\n");
@@ -255,7 +270,9 @@ int main()
                 if (cnt++ % 20 == 0)
                     printf("\n");
             }
+            Start();
             InsertSort(Previous, MAX);
+            Stop();
             printf("\nSorted Arrary:\n");
             for (i = 0; i < MAX; i++)
             {
@@ -264,7 +281,8 @@ int main()
                     printf("\n");
             }
             printf("\n");
-            cnt = 0;
+            printf("Running Time: %lfs", getTime(begin, end));
+            printf("\n");
             break;
         case '3':
             printf("\nShell sort:\n");
@@ -279,7 +297,9 @@ int main()
                 if (cnt++ % 20 == 0)
                     printf("\n");
             }
+            Start();
             ShellSort(Previous, MAX);
+            Stop();
             printf("\nSorted Arrary:\n");
             for (i = 0; i < MAX; i++)
             {
@@ -288,7 +308,8 @@ int main()
                     printf("\n");
             }
             printf("\n");
-            cnt = 0;
+            printf("Running Time: %lfs", getTime(begin, end));
+            printf("\n");
             break;
         case '4':
             printf("\nQuick sort:\n");
@@ -303,7 +324,9 @@ int main()
                 if (cnt++ % 20 == 0)
                     printf("\n");
             }
+            Start();
             QuickSort(Previous, MAX);
+            Stop();
             printf("\nSorted Arrary:\n");
             for (i = 0; i < MAX; i++)
             {
@@ -312,7 +335,8 @@ int main()
                     printf("\n");
             }
             printf("\n");
-            cnt++;
+            printf("Running Time: %lfs", getTime(begin, end));
+            printf("\n");
             break;
         case '5':
             printf("\nMerge sort:\n");
@@ -327,7 +351,9 @@ int main()
                 if (cnt++ % 20 == 0)
                     printf("\n");
             }
+            Start();
             MergeSort(Previous, MAX);
+            Stop();
             printf("\nSorted Arrary:\n");
             for (i = 0; i < MAX; i++)
             {
@@ -336,7 +362,8 @@ int main()
                     printf("\n");
             }
             printf("\n");
-            cnt++;
+            printf("Running Time: %lfs", getTime(begin, end));
+            printf("\n");
             break;
         case '6':
             printf("\nHeap sort:\n");
@@ -351,7 +378,9 @@ int main()
                 if (cnt++ % 20 == 0)
                     printf("\n");
             }
+            Start();
             HeapSort(Previous, MAX);
+            Stop();
             printf("\nSorted Arrary:\n");
             for (i = 0; i < MAX; i++)
             {
@@ -360,7 +389,8 @@ int main()
                     printf("\n");
             }
             printf("\n");
-            cnt++;
+            printf("Running Time: %lfs", getTime(begin, end));
+            printf("\n");
             break;
         case '0':
             printf("Thank to use!\n");
