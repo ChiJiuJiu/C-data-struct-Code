@@ -4,7 +4,7 @@
 #include <windows.h>
 #include <time.h>
 #include <conio.h>
-int cutoff = 3;
+int cutoff = 30;
 LARGE_INTEGER begin, end, frequency;
 typedef int ElementType;
 #define MAX 2000
@@ -55,6 +55,24 @@ int Medium3(int A[], int left, int right)
         swap(&A[center], &A[right]);
     swap(&A[center], &A[right - 1]);
     return A[right - 1];
+}
+void SelectSort(int a[], int N)
+{
+    int min;
+    int temp;
+    int i = 0, j = 0;
+    for (i = 0; i < N - 1; i++)
+    {
+        min = i;
+        for (j = i + 1; j < N; j++)
+        {
+            if (a[j] < a[min])
+                min = j;
+        }
+        temp = a[i];
+        a[i] = a[min];
+        a[min] = temp;
+    }
 }
 void Qsort(int A[], int left, int right)
 {
@@ -246,7 +264,8 @@ int* GenerateRandomNums(int size){
 		return NULL; 
     int i = 0;
     for (i = 0; i < size; i++){
-        nums[i] = rand() % RAND_MAX;
+//        nums[i] = rand() % RAND_MAX;
+nums[i] = rand() % 100;
     }
     return nums;
 }
@@ -285,11 +304,12 @@ int main()
         printf("7.Quick  Sort\n");
         printf("8.Merge  Sort\n");
         printf("9.Heap   Sort\n");
+        printf("x.Select   Sort\n");
         printf("0.exit\n");
         printf("Please Select:");
         fflush(stdin);
         scanf("%s", input);
-        while (strlen(input) > 1 || input[0] < '0' || input[0] > '9')
+        while ((strlen(input) > 1 || input[0] < '0' || input[0] > '9') && ((strlen(input) > 1) || input[0] != 'x'))
         {
             printf("Illegal input! Please input again!\n");
             fflush(stdin);
@@ -432,6 +452,27 @@ int main()
                 HeapSort(Sorted, MAX);
                 Stop();
                 ImportTofile(Sorted, MAX, "HeapSort.txt");
+                printf("\nSorted Arrary:\n");
+                Display(Sorted, MAX);
+                printf("Running Time: %lfs", getTime(begin, end));
+            }
+            else
+            {
+                printf("No nums in memory! Please Generate or Load nums!\n");
+            }
+            printf("\n");
+            break;
+        case 'x':
+            if (mark)
+            {
+                printf("\nSelect sort:\n");
+                printf("Previous Arrary:\n");
+                Display(Previous, MAX);
+                Copy(Previous, Sorted, MAX);
+                Start();
+                SelectSort(Sorted, MAX);
+                Stop();
+                ImportTofile(Sorted, MAX, "SelectSort.txt");
                 printf("\nSorted Arrary:\n");
                 Display(Sorted, MAX);
                 printf("Running Time: %lfs", getTime(begin, end));
