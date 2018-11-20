@@ -6,7 +6,6 @@
 #include <conio.h>
 int cutoff = 30;
 LARGE_INTEGER begin, end, frequency;
-typedef int ElementType;
 #define MAX 2000
 void InsertSort(int PreviousArray[], int n)
 {
@@ -178,7 +177,7 @@ void PercDown(int A[], int p, int N)
 void HeapSort(int A[], int N)
 {
     int i;
-    for (i = N / 2 - 1; i >= 0; i--)
+    for (i = N / 2 + 1; i >= 0; i--)
     {
         PercDown(A, i, N);
     }
@@ -264,9 +263,8 @@ int* GenerateRandomNums(int size){
 		return NULL; 
     int i = 0;
     for (i = 0; i < size; i++){
-//        nums[i] = rand() % RAND_MAX;
-nums[i] = rand() % 100;
-    }
+    nums[i] = rand() % RAND_MAX;
+}
     return nums;
 }
 void Display(int nums[], int size){
