@@ -257,10 +257,7 @@ int LoadFromfile(int nums[], int N,char filename[]){
     fclose(FP);
 	return 1;
 }
-int* GenerateRandomNums(int size){
-    int *nums = (int *)malloc(sizeof(int) * size);
-    if(!nums)
-		return NULL; 
+int* GenerateRandomNums(int nums[],int size){ 
     int i = 0;
     for (i = 0; i < size; i++){
     nums[i] = rand() % RAND_MAX;
@@ -283,28 +280,32 @@ void Copy(int* Previous,int* Sorted,int size){
         Sorted[i] = Previous[i];
     }
 }
+void menu(){
+	printf("\t\t\t\t*****************************************\n");
+        printf("\t\t\t\t\t1.Generate random numbers\n");
+        printf("\t\t\t\t\t2.Read nums from file\n");
+        printf("\t\t\t\t\t3.Write nums to file\n");
+        printf("\t\t\t\t\t4.Bubble Sort\n");
+        printf("\t\t\t\t\t5.Insert Sort\n");
+        printf("\t\t\t\t\t6.Shell  Sort\n");
+        printf("\t\t\t\t\t7.Quick  Sort\n");
+        printf("\t\t\t\t\t8.Merge  Sort\n");
+        printf("\t\t\t\t\t9.Heap   Sort\n");
+        printf("\t\t\t\t\tx.Select   Sort\n");
+        printf("\t\t\t\t\t0.exit\n");
+        printf("\t\t\t\t*****************************************\n");
+        printf("\t\t\t\t\tPlease Select:");
+}
 int main()
 {	QueryPerformanceFrequency(&frequency);
     char x;
     srand(time(NULL));
-    int *Previous;
-    int Sorted[MAX];
+    int *Previous = (int*)malloc(sizeof(int)*MAX);
+    int *Sorted = (int*)malloc(sizeof(int)*MAX);
     int mark = 0;
     char input[2];
     do
-    {
-        printf("1.Generate random numbers\n");
-        printf("2.Read nums from file\n");
-        printf("3.Write nums to file\n");
-        printf("4.Bubble Sort\n");
-        printf("5.Insert Sort\n");
-        printf("6.Shell  Sort\n");
-        printf("7.Quick  Sort\n");
-        printf("8.Merge  Sort\n");
-        printf("9.Heap   Sort\n");
-        printf("x.Select   Sort\n");
-        printf("0.exit\n");
-        printf("Please Select:");
+    {	menu();
         fflush(stdin);
         scanf("%s", input);
         while ((strlen(input) > 1 || input[0] < '0' || input[0] > '9') && ((strlen(input) > 1) || input[0] != 'x'))
@@ -317,7 +318,7 @@ int main()
         switch (x)
         {
         case '1':
-            Previous = GenerateRandomNums(MAX);
+            Previous = GenerateRandomNums(Previous,MAX);
             if(Previous){
             	printf("Below are the Random numbers:\n");
             	Display(Previous, MAX);
