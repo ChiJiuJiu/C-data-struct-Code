@@ -3,10 +3,9 @@
 #include <string.h>
 #include <windows.h>
 #include <time.h>
-#include <conio.h>
 int cutoff = 30;
 LARGE_INTEGER begin, end, frequency;
-#define MAX 2000
+#define MAX 20000
 void InsertSort(int PreviousArray[], int n)
 {
     int temp = 0, i = 0, j = 0;
@@ -18,7 +17,7 @@ void InsertSort(int PreviousArray[], int n)
             PreviousArray[j] = PreviousArray[j - 1];
         }
         PreviousArray[j] = temp;
-    }
+    } 
 }
 void ShellSort(int PreviousArray[], int n)
 {
@@ -291,13 +290,14 @@ void menu(){
         printf("\t\t\t\t\t7.Quick  Sort\n");
         printf("\t\t\t\t\t8.Merge  Sort\n");
         printf("\t\t\t\t\t9.Heap   Sort\n");
-        printf("\t\t\t\t\tx.Select   Sort\n");
+        printf("\t\t\t\t\tx.Select Sort\n");
         printf("\t\t\t\t\t0.exit\n");
         printf("\t\t\t\t*****************************************\n");
         printf("\t\t\t\t\tPlease Select:");
 }
 int main()
-{	QueryPerformanceFrequency(&frequency);
+{
+    QueryPerformanceFrequency(&frequency);
     char x;
     srand(time(NULL));
     int *Previous = (int*)malloc(sizeof(int)*MAX);
