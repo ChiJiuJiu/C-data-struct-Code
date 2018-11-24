@@ -176,7 +176,7 @@ void PercDown(int A[], int p, int N)
 void HeapSort(int A[], int N)
 {
     int i;
-    for (i = N / 2 + 1; i >= 0; i--)
+    for (i = N / 2 - 1; i >= 0; i--)
     {
         PercDown(A, i, N);
     }
