@@ -17,7 +17,7 @@ void InsertSort(int PreviousArray[], int n)
             PreviousArray[j] = PreviousArray[j - 1];
         }
         PreviousArray[j] = temp;
-    } 
+    }
 }
 void ShellSort(int PreviousArray[], int n)
 {
