@@ -134,12 +134,16 @@ Node* Findloc(Node* Head,int loc){
     Node *pre = Head;
     if(!p)
         return NULL;
-    while(p){
-        if(p->loc != loc){
-            pre = p;
-            p = p->next;
-        }else
-        	break;
+    // while(p){
+    //     if(p->loc != loc){
+    //         pre = p;
+    //         p = p->next;
+    //     }else
+    //     	break;
+    // }
+    while(p && (p->loc != loc)){
+        pre = p;
+        p = p->next;
     }
     if(!p){
         return NULL;
@@ -148,13 +152,108 @@ Node* Findloc(Node* Head,int loc){
     p->next = NULL;
     return p;
 }
-void FreeMemory(Node* Head,int loc){
-    Node *p = Findloc(Head, loc);
-    if(!p){
-    	printf("Free Memory Fail!\n");
-    	return;	
+Node* adjust(Node* Head,Node* pre,Node* p,Node* next){
+	if(pre->loc == 0 && pre->size == 0){		//fist node
+		if(!next){
+			pre->next = p->next;
+			return p;
+		}else{
+			if(next->loc == p->loc + p->size){
+				p->size += next->size;
+				p->next = next->next;
+				next->next = NULL;
+				free(next);
+				pre->next = p->next;
+				p->next = NULL;
+				return p;
+			}else{
+				pre->next = next;
+				p->next = NULL;
+				return p;
+			}
+		}	
 	}
-    Insert(Free, p);
+    if(!next){
+        if(p->loc == pre->loc + pre->size){
+            pre->size += p->size;
+            Node *ppre = Head->next;
+            while(ppre->next != pre)
+                ppre = ppre->next;
+            ppre->next = p->next;
+            pre->next = NULL;
+            p->next = NULL;
+            free(p);
+            return pre;
+        }else{
+            pre->next = NULL;
+            return p;
+        }
+    }else{
+        if ((p->loc != pre->loc + pre->size) && (p->loc + p->size != next->loc)){
+            pre->next = next;
+            p->next = NULL;
+            return p;
+        }else if((p->loc == pre->loc + pre->size) && (p->loc + p->size != next->loc)){
+            Node *target = Head->next;
+            while(target->next != pre){
+                target = target->next;
+            }
+            target->next = next;
+            pre->next = NULL;
+            p->next = NULL;
+            pre->size += p->size;
+            return pre;
+        }else{
+            pre->size += p->size + next->size;
+            Node *target = Head->next;
+            while(target->next != pre){
+                target = target->next;
+            }
+            target->next = next->next;
+            pre->next = NULL;
+            p->next = NULL;
+            next->next = NULL;
+            free(p);
+            free(next);
+            return pre;
+        }
+    }
+}
+void insert(Node* Head,Node* node){
+    Node *pre = Head;
+    Node *p = Head->next;
+    if(!p){
+        pre->next = node;
+        node->next = NULL;
+        return;
+    }
+    while(p && (p->loc < node->loc)){
+        pre = p;
+        p = p->next;
+    }
+    node->next = p;
+    pre->next = node;
+    return;
+}
+void FreeMemory(Node *Allocation, int loc){
+    // Node *p = Findloc(Head, loc);
+    // if(!p){
+    // 	printf("Free Memory Fail!\n");
+    // 	return;	
+	// }
+    Node *pre = Allocation;
+    Node *p = Allocation->next;
+    if(!p)
+        return;
+    while(p && (p->loc != loc)){
+    	pre = p;
+    	p = p->next;
+	}
+	if(!p)
+		return;
+    Node *target = adjust(Allocation,pre, p, p->next);
+    insert(Free, target);
+    //Insert(Free, p);
 }
 void Display(Node* Head){
     Node *p = Head->next;
@@ -183,6 +282,10 @@ void Menu(){
 int main(){
     Free = (Node *)malloc(sizeof(Node));
     Allocation = (Node *)malloc(sizeof(Node));
+    Free->loc = 0;
+    Free->size = 0;
+    Allocation->loc = 0;
+    Allocation->size = 0;
     Free->next = NULL;
     Allocation->next = NULL;
     int x = 0,loc = 0,size = 0;
