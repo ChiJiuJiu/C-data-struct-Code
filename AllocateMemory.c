@@ -49,10 +49,6 @@ Node* firstNode(Node* Free,int size){
         }
     return GetTarget(Free, p, size);
 }
-void Adjust(Node* pre,Node* next){
-    if(pre->loc == next->loc)
-        next->loc += pre->size;
-}
 void Allocate(Node* Head, Node* p){
     Node *pre = Head;
     Node *target = Head->next;
@@ -76,83 +72,7 @@ void Request(int size){
 	}
     Allocate(Allocation, p);
 }
-void Merge(Node* pre,Node* target,Node* p){
-    if(pre->loc + pre->size == p->loc){
-        pre->size += p->size;
-        free(p);
-        while (pre->next)
-        {
-            if (pre->loc + pre->size == target->loc)
-            {
-                pre->size += target->size;
-                pre->next = target->next;
-                free(target);
-                target = pre->next;
-            }
-        }
-    }else if(target && p->loc+p->size == target->loc){
-        target->loc = p->loc;
-        target->size += p->size;
-        free(p);
-        pre = target;
-        target = pre->next;
-        while(pre->next){
-            if (pre->loc + pre->size == target->loc)
-            {
-                pre->size += target->size;
-                pre->next = target->next;
-                free(target);
-                target = pre->next;
-            }
-        }
-    }else{
-        p->next = target;
-        pre->next = p;
-    }
-}
-void Insert(Node* Head,Node* p){
-    Node *pre = Head;
-    Node *target = Head->next;
-    if(!target){
-        Head->next = p;
-        p->next = NULL;
-        return;
-    }
-    while(target){
-        if(target->loc <= p->loc){
-            pre = target;
-            target = target->next;
-        }else
-        {
-            break;
-        }
-    }
-    Merge(pre, target, p);
-}
-Node* Findloc(Node* Head,int loc){
-    Node *p = Head->next;
-    Node *pre = Head;
-    if(!p)
-        return NULL;
-    // while(p){
-    //     if(p->loc != loc){
-    //         pre = p;
-    //         p = p->next;
-    //     }else
-    //     	break;
-    // }
-    while(p && (p->loc != loc)){
-        pre = p;
-        p = p->next;
-    }
-    if(!p){
-        return NULL;
-    }
-    pre->next = p->next;
-    p->next = NULL;
-    return p;
-}
-Node* adjust(Node* Head,Node* pre,Node* p,Node* next){
+Node* Adjust(Node* Head,Node* pre,Node* p,Node* next){
 	if(pre->loc == 0 && pre->size == 0){		//fist node
 		if(!next){
 			pre->next = p->next;
@@ -176,7 +96,7 @@ Node* adjust(Node* Head,Node* pre,Node* p,Node* next){
     if(!next){
         if(p->loc == pre->loc + pre->size){
             pre->size += p->size;
-            Node *ppre = Head->next;
+            Node *ppre = Head;
             while(ppre->next != pre)
                 ppre = ppre->next;
             ppre->next = p->next;
@@ -194,7 +114,7 @@ Node* adjust(Node* Head,Node* pre,Node* p,Node* next){
             p->next = NULL;
             return p;
         }else if((p->loc == pre->loc + pre->size) && (p->loc + p->size != next->loc)){
-            Node *target = Head->next;
+            Node *target = Head;
             while(target->next != pre){
                 target = target->next;
             }
@@ -205,7 +125,7 @@ Node* adjust(Node* Head,Node* pre,Node* p,Node* next){
             return pre;
         }else{
             pre->size += p->size + next->size;
-            Node *target = Head->next;
+            Node *target = Head;
             while(target->next != pre){
                 target = target->next;
             }
@@ -219,7 +139,7 @@ Node* adjust(Node* Head,Node* pre,Node* p,Node* next){
         }
     }
 }
-void insert(Node* Head,Node* node){
+void Insert(Node* Head,Node* node){
     Node *pre = Head;
     Node *p = Head->next;
     if(!p){
@@ -235,12 +155,17 @@ void insert(Node* Head,Node* node){
     pre->next = node;
     return;
 }
+int Merge(Node* pre,Node *next){
+    if(next->loc == pre->loc + pre->size){
+        pre->size += next->size;
+        pre->next = next->next;
+        next->next = NULL;
+        free(next);
+        return 1;
+    }
+    return 0;
+}
 void FreeMemory(Node *Allocation, int loc){
-    // Node *p = Findloc(Head, loc);
-    // if(!p){
-    // 	printf("Free Memory Fail!\n");
-    // 	return;	
-	// }
     Node *pre = Allocation;
     Node *p = Allocation->next;
     if(!p)
@@ -251,9 +176,20 @@ void FreeMemory(Node *Allocation, int loc){
 	}
 	if(!p)
 		return;
-    Node *target = adjust(Allocation,pre, p, p->next);
-    insert(Free, target);
-    //Insert(Free, p);
+    Node *target = Adjust(Allocation,pre, p, p->next);
+    Insert(Free, target);
+    pre = Free->next;
+    if(!pre)
+        return;
+    p = pre->next;
+    while(p){
+        if(Merge(pre,p))
+            p = pre->next;
+        else{
+            pre = p;
+            p = pre->next;
+        }
+    }
 }
 void Display(Node* Head){
     Node *p = Head->next;
