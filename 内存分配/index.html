@@ -1,0 +1,47 @@
+﻿<html>
+<title>动态内存分配</title>
+<meta charset="UTF-8">
+<script type="text/javascript" src="index.js"></script>
+<link href="index.css" rel="stylesheet" type="text/css"/>
+<body onload="onload()">
+
+	<div class="aa">
+	<input type="text" id="text">
+	<input type="button" value="分配" class="btn" onclick="main();"/>
+ 	<input type="button" value="回收" class='btn' onclick="recycle();"/>
+	</div>
+	<div id="container">
+		
+		<div id="div1">
+			<h2>首次适应算法</h2>
+			<div class="heihei"><ul id="ul00"><li></li></ul></div>
+			<div class="haha"><ul id="ul01"><li></li></ul></div>
+		</div> 
+		
+		<div id="div2">
+			<h2>循环首次适应算法</h2>
+			<div class="heihei"><ul id="ul11"><li></li></ul></div>
+			<div class="haha"><ul id="ul12"><li></li></ul></div>
+		</div> 
+
+		
+		<div id="div3">
+			<h2>最佳适应算法</h2>
+			<div class="heihei"><ul id="ul22"><li></li></ul></div>
+			<div class="haha"><ul id="ul23"><li></li></ul></div>
+		</div> 
+
+		
+		<div id="div4">
+			<h2>最坏适应算法</h2>
+			<div class="heihei"><ul id="ul33"><li></li></ul></div>
+			<div class="haha"><ul id="ul34"><li></li></ul></div>
+		</div> 
+
+
+	
+	</div>   
+</body>
+</html>
+
+
